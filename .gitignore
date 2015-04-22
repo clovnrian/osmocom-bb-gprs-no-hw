@@ -1,1 +1,6 @@
 *.o
+.metadata
+RemoteSystemTempFiles
+src/*/**/.project
+src/*/**/.cproject
+src/*/**/.settings
