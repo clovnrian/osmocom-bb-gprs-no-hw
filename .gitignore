@@ -1,6 +1,9 @@
 *.o
 .metadata
 RemoteSystemTempFiles
-src/*/**/.project
-src/*/**/.cproject
+.project
+.cproject
 src/*/**/.settings
+src/host/layer23/compile
+src/log
+src/shared/libosmocore/compile
