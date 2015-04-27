@@ -16,6 +16,8 @@
 #define MOBILE_ADDR "127.0.0.1"
 #define BTS_ARFCN 17;
 
+int lastFrameNumber = 1780600;
+
 int create_socket(){
   int s;
   struct sockaddr_in myaddr;
@@ -166,7 +168,7 @@ struct gsmtap_hdr *createGsmtapHeader(uint8_t channelType){
 
 	header->antenna_nr = 0;
 	header->arfcn = BTS_ARFCN;
-	header->frame_number = rand() % UINT32_MAX;
+	header->frame_number = (lastFrameNumber + (rand() % 10)) % UINT32_MAX;
 	header->version = 0x01;
 	header->signal_dbm = 0;
 	header->snr_db = 170;
@@ -175,6 +177,8 @@ struct gsmtap_hdr *createGsmtapHeader(uint8_t channelType){
 	header->hdr_len = 16;
 	header->sub_slot = 0;
 	header->sub_type = channelType;
+
+	lastFrameNumber = header->frame_number;
 
 	return header;
 }

@@ -146,9 +146,9 @@ void l1_to_l2_ccch_mode_conf(int socket_l2, struct l1ctl_info_dl *info_dl){
 
 /* transmit L1CTL_DATA_IND message */
 void l1_to_l2_data_ind(int socket_l2, unsigned char *data, int len){
-	struct msgb *msg = l1ctl_msgb_alloc(L1CTL_DATA_IND,0);
+	struct msgb *msg = l1ctl_msgb_alloc(L1CTL_DATA_IND);
 	struct l1ctl_data_ind *data_ind;
-	struct l1ctl_info_dl *info_dl = (struct l1ctl_info_dl *) msgb_put(msg, sizeof(*info_dl));
+	struct l1ctl_info_dl *info_dl;
 	struct gsmtap_hdr *gsmtapHeader = malloc(sizeof(struct gsmtap_hdr));
 
 	/* fill the gsmtap header from incoming msg */
@@ -157,8 +157,8 @@ void l1_to_l2_data_ind(int socket_l2, unsigned char *data, int len){
 	/* set global ARFCN */
 	globalArfcn = gsmtapHeader->arfcn;
 
-	//fill_info_dl_structure(gsmtapHeader, info_dl);
-	data_ind = (struct l1ctl_data_ind *) msgb_put(msg, sizeof(*data_ind));
+	info_dl = fill_info_dl_structure(gsmtapHeader, msg);
+	data_ind = (struct l1ctl_data_ind *) msgb_put(msg, sizeof(struct l1ctl_data_ind));
 
 	memcpy(&data_ind->data, data + sizeof(struct gsmtap_hdr), len - sizeof(struct gsmtap_hdr));
 
@@ -189,15 +189,19 @@ struct msgb *l1ctl_msgb_alloc(uint8_t msg_type, uint8_t flag){
 	return msg;
 }
 
-void fill_info_dl_structure(struct gsmtap_hdr *gsmtapHeader, struct l1ctl_info_dl *info_dl){
+struct l1ctl_info_dl *fill_info_dl_structure(struct gsmtap_hdr *gsmtapHeader, struct msgb *msg){
 
-	  info_dl->chan_nr = gsmtapHeader->sub_type;
-	  info_dl->link_id = (uint8_t) 0x0;
-	  info_dl->band_arfcn = gsmtapHeader->arfcn;
-	  info_dl->frame_nr = gsmtapHeader->frame_number;
-	  info_dl->rx_level = gsmtapHeader->signal_dbm;
-	  info_dl->snr = gsmtapHeader->snr_db;
-	  info_dl->num_biterr = (uint8_t) 0;
-	  info_dl->fire_crc = (uint8_t) 0;
+	struct l1ctl_info_dl *info_dl = (struct l1ctl_info_dl *) msgb_put(msg, sizeof(struct l1ctl_info_dl));
+
+	info_dl->chan_nr = gsmtapHeader->sub_type;
+	info_dl->link_id = (uint8_t) 0x0;
+	info_dl->band_arfcn = gsmtapHeader->arfcn;
+	info_dl->frame_nr = gsmtapHeader->frame_number;
+	info_dl->rx_level = gsmtapHeader->signal_dbm;
+	info_dl->snr = gsmtapHeader->snr_db;
+	info_dl->num_biterr = (uint8_t) 0;
+	info_dl->fire_crc = (uint8_t) 0;
+
+	return info_dl;
 }
 
