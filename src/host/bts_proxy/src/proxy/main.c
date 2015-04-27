@@ -165,7 +165,7 @@ int main(void){
 	}
 
 	/* close sockets */
-	//close(sock_layer2);
+	close(sock_layer2);
 	close(sock_bts);
 
 	return 0;

@@ -1,6 +1,6 @@
 CC 	= gcc
 MFLAGS  = -I../include -I../../../shared/libosmocore/include
-CFLAGS  = $(MFLAGS) -Wall -c
+CFLAGS  = $(MFLAGS) -Wall -c -g -O0
 LDFLAGS = -o
 OSMOPATH = ../../../../../libosmocore/src
 LIBOSMOCORE = $(OSMOPATH)/msgb.o $(OSMOPATH)/panic.o $(OSMOPATH)/talloc.o $(OSMOPATH)/backtrace.o  $(OSMOPATH)/logging.o $(OSMOPATH)/utils.o
@@ -13,13 +13,13 @@ BTS_OBJ = BTS.o $(LIBOSMOCORE)
 all: proxy bts
 
 bts: $(BTS_OBJ)
-	$(CC) $(BTS_OBJ) -o BTS/BTS
+	$(CC) -g -O0 $(BTS_OBJ) -o BTS/BTS
 
 BTS.o: BTS/main.c
 	$(CC) $(CFLAGS) -o BTS.o BTS/main.c
 
 proxy: $(OBJ)
-	$(CC) $(OBJ) -o proxy/proxy
+	$(CC) -g -O0 $(OBJ) -o proxy/proxy
 
 proxy.o: proxy/main.c
 	$(CC) $(CFLAGS) -o proxy.o proxy/main.c
