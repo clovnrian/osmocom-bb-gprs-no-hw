@@ -95,9 +95,10 @@ void l1_to_l2_pm_conf(int socket_l2, struct l1ctl_pm_req *pm_req){
 		pm_resp = (struct l1ctl_pm_conf *) msgb_put(msg, sizeof(*pm_resp));
 
 		pm_resp->band_arfcn = htons((uint16_t) i);
-	  	pm_resp->pm[0] = rand() % 100 + 1;
+	  	pm_resp->pm[0] = (i == globalArfcn) ? rand() % 100 + 1 : 0;
 	  	pm_resp->pm[1] = 0;
 	}
+
 
 	write_to_L2(socket_l2, msg);
 }
@@ -154,7 +155,7 @@ void l1_to_l2_data_ind(int socket_l2, unsigned char *data, int len){
 	memcpy(gsmtapHeader, data, sizeof(struct gsmtap_hdr));
 
 	/* set global ARFCN */
-	globalArfcn = gsmtapHeader->arfcn;
+	globalArfcn = ntohs(gsmtapHeader->arfcn);
 
 	info_dl = fill_info_dl_structure(gsmtapHeader, msg);
 	data_ind = (struct l1ctl_data_ind *) msgb_put(msg, sizeof(struct l1ctl_data_ind));

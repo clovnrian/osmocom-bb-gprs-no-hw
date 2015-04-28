@@ -13,7 +13,7 @@ BTS_OBJ = BTS.o
 all: proxy bts
 
 bts: $(BTS_OBJ)
-	$(CC) $(INCLUDE) $(BTS_OBJ) -o BTS/BTS $(LIBOSMOCORE)
+	$(CC) $(INCLUDE) $(BTS_OBJ) -g -O0 -o BTS/BTS $(LIBOSMOCORE)
 
 BTS.o: BTS/main.c
 	$(CC) $(CFLAGS) -o BTS.o BTS/main.c
