@@ -24,3 +24,8 @@ BTS send these messages:
 - BCCH - system type information 2
 - BCCH - system type information 2ter
 - PCH - Paging request
+
+
+### Hints
+
+- http://www.benkeser.com/obbphy.pdf
