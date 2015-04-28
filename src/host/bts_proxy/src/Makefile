@@ -1,6 +1,6 @@
 CC 	= gcc
-MFLAGS  = -I../include -I../../../shared/libosmocore/include
-CFLAGS  = $(MFLAGS) -Wall -c -g -O0
+MFLAGS  = -I../include -I../../../../../libosmocore/include
+CFLAGS  = $(MFLAGS) -Wall -c -g3
 LDFLAGS = -o
 OSMOPATH = ../../../../../libosmocore/src
 LIBOSMOCORE = $(OSMOPATH)/msgb.o $(OSMOPATH)/panic.o $(OSMOPATH)/talloc.o $(OSMOPATH)/backtrace.o  $(OSMOPATH)/logging.o $(OSMOPATH)/utils.o

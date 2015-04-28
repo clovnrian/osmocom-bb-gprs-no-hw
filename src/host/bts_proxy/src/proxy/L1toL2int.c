@@ -16,7 +16,6 @@
 #include <layer1.h>
 #include <L2toL1int.h>
 #include <L1toL2int.h>
-#include <osmocom/core/msgb.h>
 #include <osmocom/gsm/protocol/gsm_04_08.h>
 #include <osmocom/core/gsmtap.h>
 
@@ -146,7 +145,7 @@ void l1_to_l2_ccch_mode_conf(int socket_l2, struct l1ctl_info_dl *info_dl){
 
 /* transmit L1CTL_DATA_IND message */
 void l1_to_l2_data_ind(int socket_l2, unsigned char *data, int len){
-	struct msgb *msg = l1ctl_msgb_alloc(L1CTL_DATA_IND);
+	struct msgb *msg = l1ctl_msgb_alloc(L1CTL_DATA_IND, 0);
 	struct l1ctl_data_ind *data_ind;
 	struct l1ctl_info_dl *info_dl;
 	struct gsmtap_hdr *gsmtapHeader = malloc(sizeof(struct gsmtap_hdr));

@@ -273,6 +273,8 @@ printf("Dropping frame with %u bit errors\n", dl->num_biterr);
 	pp.u.data.chan_nr = dl->chan_nr;
 	pp.u.data.link_id = dl->link_id;
 
+	printf("chan_nr: %d --- link_id: %d\n", pp.u.data.chan_nr, pp.u.data.link_id);
+
 	/* send it up into LAPDm */
 	return lapdm_phsap_up(&pp.oph, le);
 }
