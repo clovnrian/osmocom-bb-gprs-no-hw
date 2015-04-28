@@ -11,12 +11,13 @@
 #include <osmocom/core/msgb.h>
 #include <osmocom/gsm/protocol/gsm_04_08.h>
 #include <osmocom/core/gsmtap.h>
+#include <osmocom/core/gsmtap_util.h>
 #include "bts.h"
 
 #define MOBILE_ADDR "127.0.0.1"
-#define BTS_ARFCN 17;
 
 int lastFrameNumber = 1780600;
+uint16_t BTS_ARFCN = 17;
 
 int create_socket(){
   int s;
@@ -44,15 +45,22 @@ int create_socket(){
 }
 
 /** write message to mobile socket **/
-void write_to_mobile(int socket_mobile, void *data, int size, uint8_t channelType){
+void write_to_mobile(int socket_mobile, uint8_t *data, int size, uint8_t channelType){
 	struct sockaddr_in mobile;
-	struct gsmtap_hdr *gsmtapHeader;
-	unsigned char *buffer;
-	buffer = malloc(size + sizeof(*gsmtapHeader));
+	struct msgb *msg;
+	srand(time(NULL));
 
-	gsmtapHeader = createGsmtapHeader(channelType);
-	memcpy(buffer, gsmtapHeader, sizeof(*gsmtapHeader));
-	memcpy(buffer + sizeof(*gsmtapHeader), data, size);
+	msg = gsmtap_makemsg(
+	  BTS_ARFCN,
+	  0,
+	  channelType,
+	  0,
+	  (lastFrameNumber + (rand() % 10)) % UINT32_MAX,
+	  0,
+	  170,
+	  data,
+	  size
+	);
 
 	memset((char *) &mobile, 0, sizeof(mobile));
         mobile.sin_family = AF_INET;
@@ -63,13 +71,12 @@ void write_to_mobile(int socket_mobile, void *data, int size, uint8_t channelTyp
         }
 
 	/** send data to mobile **/
-	if (sendto(socket_mobile, buffer, size + sizeof(*gsmtapHeader), 0, &mobile, sizeof(mobile))==-1)
+	if (sendto(socket_mobile, msg->data, msg->len, 0, &mobile, sizeof(mobile))==-1)
            printf("Error on sending data to mobile\n");
 	else printf("Data sended\n");
 
-	free(buffer);
-	free(gsmtapHeader);
 	free(data);
+	msgb_free(msg);
 }
 
 /** Create and send BCCH message (system type information 3) to mobile **/
@@ -84,7 +91,7 @@ void send_bcch_sys_info_3_msg(int sock_mobile){
 
 	//char hex[23] = {0x49,0x06,0x1b,0x2d,0xb5,0x32,0xf1,0x10,0x00,0x0a,0xe0,0x03,0x3c,0x57,0x65,0x0b,0x79,0x00,0x00,0x80,0x00,0x40,0x0b};
 	
-	memcpy(&sys_info->header,&header, sizeof(sys_info->header));
+	memset(&sys_info->header,header, sizeof(header));
 	
 	sys_info->cell_identity = 0x2DB5;
 	sys_info->lai.digits[1] = 0x32;
@@ -92,13 +99,13 @@ void send_bcch_sys_info_3_msg(int sock_mobile){
 	sys_info->lai.digits[3] = 0x10;
 	sys_info->lai.lac = 10;
 	
-	memcpy(&sys_info->control_channel_desc,&chan_desc, sizeof(sys_info->control_channel_desc));
-	memcpy(&sys_info->cell_options,&cell_opt, sizeof(sys_info->cell_options));
-	memcpy(&sys_info->cell_sel_par,&cell_sel, sizeof(sys_info->cell_sel_par));
-	memcpy(&sys_info->rach_control,&rach_cont, sizeof(sys_info->rach_control));
-	memcpy(&sys_info->rest_octets,&res_oct, sizeof(sys_info->rest_octets));
+	memset(&sys_info->control_channel_desc,chan_desc, sizeof(sys_info->control_channel_desc));
+	memset(&sys_info->cell_options,cell_opt, sizeof(sys_info->cell_options));
+	memset(&sys_info->cell_sel_par,cell_sel, sizeof(sys_info->cell_sel_par));
+	memset(&sys_info->rach_control,rach_cont, sizeof(sys_info->rach_control));
+	memset(&sys_info->rest_octets,res_oct, sizeof(sys_info->rest_octets));
 
-	write_to_mobile(sock_mobile, sys_info, sizeof(*sys_info), GSMTAP_GMR1_BCCH);
+	write_to_mobile(sock_mobile, sys_info, sizeof(*sys_info), GSMTAP_CHANNEL_BCCH);
 }
 
 /** Create and send BCCH message (system type information 4) to mobile **/
@@ -117,7 +124,7 @@ void send_bcch_sys_info_4_msg(int sock_mobile){
 	memcpy(&sys_info->cell_sel_par,&cell_sel, sizeof(sys_info->cell_sel_par));
 	memcpy(&sys_info->rach_control,&rach_cont, sizeof(sys_info->rach_control));
 
-	write_to_mobile(sock_mobile, sys_info, sizeof(*sys_info), GSMTAP_GMR1_BCCH);
+	write_to_mobile(sock_mobile, sys_info, sizeof(*sys_info), GSMTAP_CHANNEL_BCCH);
 }
 
 /** Create and send BCCH message (system type information 2) to mobile **/
@@ -128,23 +135,23 @@ void send_bcch_sys_info_2_msg(int sock_mobile){
 	int rach_cont = 0x790000;
 
 	sys_info->ncc_permitted = 0x08;
-	memcpy(&sys_info->header,&header, sizeof(sys_info->header));
-	memcpy(&sys_info->bcch_frequency_list,&frequencyList, sizeof(sys_info->bcch_frequency_list));
-	memcpy(&sys_info->rach_control,&rach_cont, sizeof(sys_info->rach_control));
+	memset(&sys_info->header, 0x59061A, sizeof(0x59061A));
 
-	write_to_mobile(sock_mobile, sys_info, sizeof(*sys_info), GSMTAP_GMR1_BCCH);
+	memset(&sys_info->bcch_frequency_list,frequencyList, sizeof(frequencyList));
+	memset(&sys_info->rach_control,rach_cont, sizeof(rach_cont));
+
+	write_to_mobile(sock_mobile, sys_info, sizeof(*sys_info), GSMTAP_CHANNEL_BCCH);
 }
 
 /** Create and send BCCH message (system type information 2ter) to mobile **/
 void send_bcch_sys_info_2ter_msg(int sock_mobile){
 	struct gsm48_system_information_type_2ter *sys_info = (struct gsm48_system_information_type_2ter *) malloc(sizeof(struct gsm48_system_information_type_2ter));
-	int header = 0x010603;
-	int frequencyList = 0xcb130214000000000000000000000000;
 
-	memcpy(&sys_info->header,&header, sizeof(sys_info->header));
-	memcpy(&sys_info->ext_bcch_frequency_list,&frequencyList, sizeof(sys_info->ext_bcch_frequency_list));
+	memset(sys_info,0x010603cb130214, sizeof(*sys_info));
+	//memset(&sys_info->ext_bcch_frequency_list,0xcb130214000000000000000000000000, sizeof(0xcb130214000000000000000000000000));
 
-	write_to_mobile(sock_mobile, sys_info, sizeof(*sys_info), GSMTAP_GMR1_BCCH);
+	//sys_info->header->l2_plen =
+	write_to_mobile(sock_mobile, sys_info, sizeof(*sys_info), GSMTAP_CHANNEL_BCCH);
 }
 
 /** Create and send PCH message (Paging request) to mobile **/
@@ -159,28 +166,6 @@ void send_pch_paging_request_msg(int sock_mobile){
 	memset(&paging->data, 0x00100, sizeof(0x00100));
 
 	write_to_mobile(sock_mobile, paging, sizeof(*paging), GSMTAP_CHANNEL_PCH);
-}
-
-/** Fill the GSMTAP header structure **/
-struct gsmtap_hdr *createGsmtapHeader(uint8_t channelType){
-	struct gsmtap_hdr *header = malloc(sizeof(struct gsmtap_hdr));
-	srand(time(NULL));
-
-	header->antenna_nr = 0;
-	header->arfcn = BTS_ARFCN;
-	header->frame_number = (lastFrameNumber + (rand() % 10)) % UINT32_MAX;
-	header->version = 0x01;
-	header->signal_dbm = 0;
-	header->snr_db = 170;
-	header->timeslot = 0;
-	header->type = GSMTAP_TYPE_UM;
-	header->hdr_len = 16;
-	header->sub_slot = 0;
-	header->sub_type = channelType;
-
-	lastFrameNumber = header->frame_number;
-
-	return header;
 }
 
 int main(void){

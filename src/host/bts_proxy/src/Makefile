@@ -1,25 +1,25 @@
 CC 	= gcc
-MFLAGS  = -I../include -I../../../../../libosmocore/include
-CFLAGS  = $(MFLAGS) -Wall -c -g3
+INCLUDE  = -I ../include -I /usr/local/include
+CFLAGS  = $(INCLUDE) -Wall -c -g3
 LDFLAGS = -o
-OSMOPATH = ../../../../../libosmocore/src
-LIBOSMOCORE = $(OSMOPATH)/msgb.o $(OSMOPATH)/panic.o $(OSMOPATH)/talloc.o $(OSMOPATH)/backtrace.o  $(OSMOPATH)/logging.o $(OSMOPATH)/utils.o
+OSMOPATH = 
+LIBOSMOCORE = -losmocore
 
-OBJ = proxy.o L2toL1int.o L1toL2int.o btsToMobile.o $(LIBOSMOCORE)
-BTS_OBJ = BTS.o $(LIBOSMOCORE)
+OBJ = proxy.o L2toL1int.o L1toL2int.o btsToMobile.o
+BTS_OBJ = BTS.o
 
 .PHONY: all
 
 all: proxy bts
 
 bts: $(BTS_OBJ)
-	$(CC) -g -O0 $(BTS_OBJ) -o BTS/BTS
+	$(CC) $(INCLUDE) $(BTS_OBJ) -o BTS/BTS $(LIBOSMOCORE)
 
 BTS.o: BTS/main.c
 	$(CC) $(CFLAGS) -o BTS.o BTS/main.c
 
 proxy: $(OBJ)
-	$(CC) -g -O0 $(OBJ) -o proxy/proxy
+	$(CC) $(INCLUDE) -g -O0 $(OBJ) -o proxy/proxy $(LIBOSMOCORE)
 
 proxy.o: proxy/main.c
 	$(CC) $(CFLAGS) -o proxy.o proxy/main.c
