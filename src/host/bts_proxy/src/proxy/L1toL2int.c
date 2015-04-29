@@ -156,7 +156,7 @@ void l1_to_l2_data_ind(int socket_l2, unsigned char *data, int len){
 
 	/* set global ARFCN */
 	globalArfcn = ntohs(gsmtapHeader->arfcn);
-
+	prinf("GLOBAL ARFCN SET TO: %d\n", globalArfcn);
 	info_dl = fill_info_dl_structure(gsmtapHeader, msg);
 	data_ind = (struct l1ctl_data_ind *) msgb_put(msg, sizeof(struct l1ctl_data_ind));
 
