@@ -192,8 +192,10 @@ struct msgb *l1ctl_msgb_alloc(uint8_t msg_type, uint8_t flag){
 struct l1ctl_info_dl *fill_info_dl_structure(struct gsmtap_hdr *gsmtapHeader, struct msgb *msg){
 
 	struct l1ctl_info_dl *info_dl = (struct l1ctl_info_dl *) msgb_put(msg, sizeof(struct l1ctl_info_dl));
+	uint8_t parentChan = gsmtapHeader->sub_type & 0xF0;
 
-	info_dl->link_id = (uint8_t) 0x0;
+
+	info_dl->link_id = parentChan == GSMTAP_CHANNEL_ACCH ? 0x40 : 0x0;
 	info_dl->chan_nr = chantype_gsmtap2rsl(gsmtapHeader->sub_type, 0);
 	info_dl->band_arfcn = gsmtapHeader->arfcn;
 	info_dl->frame_nr = gsmtapHeader->frame_number;

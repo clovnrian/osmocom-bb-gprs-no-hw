@@ -4697,8 +4697,6 @@ static int gsm48_rr_rx_bcch(struct osmocom_ms *ms, struct msgb *msg)
 {
 	struct gsm48_system_information_type_header *sih = msgb_l3(msg);
 
-	fprintf(stderr,"Receive BCCH msg: %d\n",sih->system_information);
-
 	switch (sih->system_information) {
 	case GSM48_MT_RR_SYSINFO_1:
 		return gsm48_rr_rx_sysinfo1(ms, msg);
@@ -4841,9 +4839,6 @@ static int gsm48_rr_unit_data_ind(struct osmocom_ms *ms, struct msgb *msg)
 	}
 
 	rsl_dec_chan_nr(rllh->chan_nr, &ch_type, &ch_subch, &ch_ts);
-
-	fprintf(stderr,"Channel type: %d\n",ch_type);
-
 	switch (ch_type) {
 	case RSL_CHAN_PCH_AGCH:
 		return gsm48_rr_rx_pch_agch(ms, msg);

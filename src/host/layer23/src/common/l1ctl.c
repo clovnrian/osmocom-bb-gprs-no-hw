@@ -148,6 +148,7 @@ static int rx_l1_rach_conf(struct osmocom_ms *ms, struct msgb *msg)
 	}
 
 	dl = (struct l1ctl_info_dl *) msg->l1h;
+	msg->l2h = msg->l3h = dl->payload;
 
 	osmo_prim_init(&pp.oph, SAP_GSM_PH, PRIM_PH_RACH,
 			PRIM_OP_CONFIRM, msg);
@@ -166,7 +167,7 @@ static int rx_ph_data_ind(struct osmocom_ms *ms, struct msgb *msg)
 	struct rx_meas_stat *meas = &ms->meas;
 	uint8_t chan_type, chan_ts, chan_ss;
 	uint8_t gsmtap_chan_type;
-	struct gsm_time tm;	
+	struct gsm_time tm;
 
 	if (msgb_l3len(msg) < sizeof(*ccch)) {
 		LOGP(DL1C, LOGL_ERROR, "MSG too short Data Ind: %u\n",
@@ -185,7 +186,6 @@ static int rx_ph_data_ind(struct osmocom_ms *ms, struct msgb *msg)
 		rsl_chan_nr_str(dl->chan_nr), tm.t1, tm.t2, tm.t3,
 		(int)dl->rx_level-110,
 		osmo_hexdump(ccch->data, sizeof(ccch->data)));
-	
 
 	meas->last_fn = ntohl(dl->frame_nr);
 	meas->frames++;
@@ -307,7 +307,6 @@ int l1ctl_tx_data_req(struct osmocom_ms *ms, struct msgb *msg,
 	uint8_t gsmtap_chan_type;
 
 	DEBUGP(DL1C, "(%s)\n", osmo_hexdump(msg->l2h, msgb_l2len(msg)));
-	fprintf(stderr,"SEND: L1CTL_DATA_REQ\n");
 
 	if (msgb_l2len(msg) > 23) {
 		LOGP(DL1C, LOGL_ERROR, "L1 cannot handle message length "
@@ -347,7 +346,6 @@ int l1ctl_tx_fbsb_req(struct osmocom_ms *ms, uint16_t arfcn,
 	struct l1ctl_fbsb_req *req;
 
 	LOGP(DL1C, LOGL_INFO, "Sync Req\n");
-	fprintf(stderr,"SEND: FBSB_REQ\n");
 
 	msg = osmo_l1_alloc(L1CTL_FBSB_REQ);
 	if (!msg)
@@ -377,7 +375,6 @@ int l1ctl_tx_ccch_mode_req(struct osmocom_ms *ms, uint8_t ccch_mode)
 	struct l1ctl_ccch_mode_req *req;
 
 	LOGP(DL1C, LOGL_INFO, "CCCH Mode Req\n");
-	fprintf(stderr,"SEND: L1CTL_CCCH_MODE_REQ\n");
 
 	msg = osmo_l1_alloc(L1CTL_CCCH_MODE_REQ);
 	if (!msg)
@@ -397,7 +394,6 @@ int l1ctl_tx_tch_mode_req(struct osmocom_ms *ms, uint8_t tch_mode,
 	struct l1ctl_tch_mode_req *req;
 
 	LOGP(DL1C, LOGL_INFO, "TCH Mode Req\n");
-	fprintf(stderr,"SEND: L1CTL_TCH_MODE_REQ\n");
 
 	msg = osmo_l1_alloc(L1CTL_TCH_MODE_REQ);
 	if (!msg)
@@ -416,8 +412,6 @@ int l1ctl_tx_param_req(struct osmocom_ms *ms, uint8_t ta, uint8_t tx_power)
 	struct msgb *msg;
 	struct l1ctl_info_ul *ul;
 	struct l1ctl_par_req *req;
-
-	fprintf(stderr,"SEND: L1CTL_PARAM_REQ\n");
 
 	msg = osmo_l1_alloc(L1CTL_PARAM_REQ);
 	if (!msg)
@@ -439,8 +433,6 @@ int l1ctl_tx_crypto_req(struct osmocom_ms *ms, uint8_t algo, uint8_t *key,
 	struct msgb *msg;
 	struct l1ctl_info_ul *ul;
 	struct l1ctl_crypto_req *req;
-
-	fprintf(stderr,"SEND: L1CTL_CRYPTO_REQ\n");	
 
 	msg = osmo_l1_alloc(L1CTL_CRYPTO_REQ);
 	if (!msg)
@@ -464,8 +456,6 @@ int l1ctl_tx_rach_req(struct osmocom_ms *ms, uint8_t ra, uint16_t offset,
 	struct l1ctl_info_ul *ul;
 	struct l1ctl_rach_req *req;
 
-	fprintf(stderr,"SEND: L1CTL_RACH_REQ\n");
-
 	msg = osmo_l1_alloc(L1CTL_RACH_REQ);
 	if (!msg)
 		return -1;
@@ -488,8 +478,6 @@ int l1ctl_tx_dm_est_req_h0(struct osmocom_ms *ms, uint16_t band_arfcn,
 	struct msgb *msg;
 	struct l1ctl_info_ul *ul;
 	struct l1ctl_dm_est_req *req;
-
-	fprintf(stderr,"SEND: L1CTL_DM_EST_REQ\n");
 
 	msg = osmo_l1_alloc(L1CTL_DM_EST_REQ);
 	if (!msg)
@@ -555,8 +543,6 @@ int l1ctl_tx_dm_freq_req_h0(struct osmocom_ms *ms, uint16_t band_arfcn,
 	struct l1ctl_info_ul *ul;
 	struct l1ctl_dm_freq_req *req;
 
-	fprintf(stderr,"SEND: L1CTL_DM_FREQ_REQ\n");
-
 	msg = osmo_l1_alloc(L1CTL_DM_FREQ_REQ);
 	if (!msg)
 		return -1;
@@ -615,8 +601,6 @@ int l1ctl_tx_dm_rel_req(struct osmocom_ms *ms)
 {
 	struct msgb *msg;
 	struct l1ctl_info_ul *ul;
-
-	fprintf(stderr,"SEND: L1CTL_DM_REL_REQ\n");
 
 	msg = osmo_l1_alloc(L1CTL_DM_REL_REQ);
 	if (!msg)
@@ -698,8 +682,6 @@ int l1ctl_tx_pm_req_range(struct osmocom_ms *ms, uint16_t arfcn_from,
 	struct msgb *msg;
 	struct l1ctl_pm_req *pm;
 
-	fprintf(stderr,"SEND: L1CTL_PM_REQ\n");
-
 	msg = osmo_l1_alloc(L1CTL_PM_REQ);
 	if (!msg)
 		return -1;
@@ -718,8 +700,6 @@ int l1ctl_tx_reset_req(struct osmocom_ms *ms, uint8_t type)
 {
 	struct msgb *msg;
 	struct l1ctl_reset *res;
-
-	fprintf(stderr,"SEND: L1CTL_RESET_REQ\n");
 
 	msg = osmo_l1_alloc(L1CTL_RESET_REQ);
 	if (!msg)
@@ -853,8 +833,6 @@ int l1ctl_tx_traffic_req(struct osmocom_ms *ms, struct msgb *msg,
 	uint8_t fr[33];
 	int i, di, si;
 
-	fprintf(stderr,"SEND: L1CTL_TRAFFIC_REQ\n");
-
 	/* Header handling */
 	tr = (struct l1ctl_traffic_req *) msg->l2h;
 
@@ -904,8 +882,6 @@ int l1ctl_tx_neigh_pm_req(struct osmocom_ms *ms, int num, uint16_t *arfcn)
 	struct msgb *msg;
 	struct l1ctl_neigh_pm_req *pm_req;
 	int i;
-
-	fprintf(stderr,"SEND: L1CTL_NEIGH_PM_REQ\n");
 
 	msg = osmo_l1_alloc(L1CTL_NEIGH_PM_REQ);
 	if (!msg)
@@ -963,64 +939,51 @@ int l1ctl_recv(struct osmocom_ms *ms, struct msgb *msg)
 
 	switch (l1h->msg_type) {
 	case L1CTL_FBSB_CONF:
-		fprintf(stderr,"L1CTL_FBSB_CONF\n");
 		rc = rx_l1_fbsb_conf(ms, msg);
 		msgb_free(msg);
 		break;
 	case L1CTL_DATA_IND:
-		fprintf(stderr,"L1CTL_DATA_IND\n");
 		rc = rx_ph_data_ind(ms, msg);
 		break;
 	case L1CTL_DATA_CONF:
-		fprintf(stderr,"L1CTL_DATA_CONF\n");
 		rc = rx_ph_data_conf(ms, msg);
 		break;
 	case L1CTL_RESET_IND:
 	case L1CTL_RESET_CONF:
-		fprintf(stderr,"L1CTL_RESET_CONF\n");
 		rc = rx_l1_reset(ms);
 		msgb_free(msg);
 		break;
 	case L1CTL_PM_CONF:
-		fprintf(stderr,"L1CTL_PM_CONF\n");
 		rc = rx_l1_pm_conf(ms, msg);
 		if (l1h->flags & L1CTL_F_DONE)
 			osmo_signal_dispatch(SS_L1CTL, S_L1CTL_PM_DONE, ms);
 		msgb_free(msg);
 		break;
 	case L1CTL_RACH_CONF:
-		fprintf(stderr,"L1CTL_RACH_CONF\n");
 		rc = rx_l1_rach_conf(ms, msg);
 		break;
 	case L1CTL_CCCH_MODE_CONF:
-		fprintf(stderr,"L1CTL_CCCH_MODE_CONF\n");
 		rc = rx_l1_ccch_mode_conf(ms, msg);
 		msgb_free(msg);
 		break;
 	case L1CTL_TCH_MODE_CONF:
-		fprintf(stderr,"L1CTL_TCH_MODE_CONF\n");
 		rc = rx_l1_tch_mode_conf(ms, msg);
 		msgb_free(msg);
 		break;
 	case L1CTL_SIM_CONF:
-		fprintf(stderr,"L1CTL_SIM_CONF\n");
 		rc = rx_l1_sim_conf(ms, msg);
 		break;
 	case L1CTL_NEIGH_PM_IND:
-		fprintf(stderr,"L1CTL_NEIGH_IND\n");
 		rc = rx_l1_neigh_pm_ind(ms, msg);
 		msgb_free(msg);
 		break;
 	case L1CTL_TRAFFIC_IND:
-		fprintf(stderr,"L1CTL_TRAFFIC_IND\n");
 		rc = rx_l1_traffic_ind(ms, msg);
 		break;
 	case L1CTL_TRAFFIC_CONF:
-		fprintf(stderr,"L1CTL_TRAFFIC_CONF\n");
 		msgb_free(msg);
 		break;
 	default:
-		fprintf(stderr,"UNKNOWN MESSAGE: %u\n",l1h->msg_type);
 		LOGP(DL1C, LOGL_ERROR, "Unknown MSG: %u\n", l1h->msg_type);
 		msgb_free(msg);
 		break;

@@ -17,7 +17,6 @@
 
 /** Receive and switch messages from BTS **/
 void switch_BTS_messages(int socket_l2, unsigned char *msg, int length){
-	printf("Receive message FROM BTS\n");
 
 	l1_to_l2_data_ind(socket_l2, msg, length);
 

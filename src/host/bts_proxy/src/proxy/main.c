@@ -124,7 +124,6 @@ void socket_messages_handling(int socket_l2, int socket_bts) {
 
 				/** receive data **/
 				if ((len=recvfrom(fds[i].fd, buffer, 100, 0, NULL, NULL)) > 0) {
-					printf("Bytes from BTS: %d\n", len);
 					switch_BTS_messages(socket_l2, &buffer, len);	//message from BTS
 				}
 			   } else {

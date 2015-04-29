@@ -29,3 +29,4 @@ BTS send these messages:
 ### Hints
 
 - http://www.benkeser.com/obbphy.pdf
+- http://www.sharetechnote.com/html/BasicCall_Voice_GSM.html
