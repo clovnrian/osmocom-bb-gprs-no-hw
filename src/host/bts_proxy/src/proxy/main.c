@@ -135,8 +135,12 @@ void socket_messages_handling(int socket_l2, int socket_bts) {
 				if ((len=recv(fds[i].fd, &msg_len, sizeof(msg_len), 0)) <= 0) {
 					if (len < 0) 
 						perror("Error receiving header on socket");
-					else printf("Closed connection to socket\n");
-		      		}
+					else {
+						printf("Closed connection to socket\n");
+						closeApp = 1;
+					}
+				}
+		       }
 
 				msg = malloc(sizeof(uint8_t)*msg_len);
 		
