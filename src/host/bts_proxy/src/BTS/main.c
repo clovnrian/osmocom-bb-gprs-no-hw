@@ -57,7 +57,7 @@ void write_to_mobile(int socket_mobile, uint8_t *data, int size, uint8_t channel
 	  0,
 	  (lastFrameNumber + (rand() % 10)) % UINT32_MAX,
 	  0,
-	  170,
+	  -100,
 	  data,
 	  size
 	);

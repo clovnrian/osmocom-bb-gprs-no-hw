@@ -95,7 +95,7 @@ void l1_to_l2_pm_conf(int socket_l2, struct l1ctl_pm_req *pm_req){
 		pm_resp = (struct l1ctl_pm_conf *) msgb_put(msg, sizeof(*pm_resp));
 
 		pm_resp->band_arfcn = htons((uint16_t) i);
-	  	pm_resp->pm[0] = (i == globalArfcn) ? rand() % 100 + 1 : 0;
+	  	pm_resp->pm[0] = (i == globalArfcn) ? 10 : 0;
 	  	pm_resp->pm[1] = 0;
 	}
 
