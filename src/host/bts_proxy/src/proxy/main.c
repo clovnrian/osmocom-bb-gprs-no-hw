@@ -21,11 +21,13 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
-#include <layer1.h>
 #include <L1toL2int.h>
 #include <L2toL1int.h>
 #include <btsToMobile.h>
 
+#define SOCK_PATH_TO_L2 "/tmp/osmocom_l2"
+#define BTS_ADDRESS "127.0.0.1"
+const int BTS_PORT = 19789;
 
 int closeApp = 0;
 
@@ -82,7 +84,7 @@ int create_socket_bts(){
   memset((char *)&myaddr, 0, sizeof(myaddr)); 
   myaddr.sin_family = AF_INET;
   myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-  myaddr.sin_port = htons(4729);
+  myaddr.sin_port = htons(BTS_PORT);
 
   if (bind(s, &myaddr, sizeof(myaddr)) == -1) {
     perror("Error binding socket");

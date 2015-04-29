@@ -115,17 +115,9 @@ void send_bcch_sys_info_1_msg(int sock_mobile){
 
 /** Create and send PCH message (Paging request) to mobile **/
 void send_pch_paging_request_msg(int sock_mobile){
-	struct gsm48_paging1 *paging = (struct gsm48_paging1 *) malloc(sizeof(struct gsm48_paging1));
-	int data = 0x00100;
+	uint8_t data[] = {0x15,0x06,0x21,0x00,0x01,0x00,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b};
 
-	paging->l2_plen = 0x15;
-	paging->proto_discr = 0x06;
-	paging->msg_type = 0x21;
-	paging->pag_mode = 0x0;
-
-	memcpy(&paging->data, &data, sizeof(data));
-
-	write_to_mobile(sock_mobile, paging, sizeof(*paging), GSMTAP_CHANNEL_PCH);
+	write_to_mobile(sock_mobile, data, sizeof(data), GSMTAP_CHANNEL_PCH);
 }
 
 /** Create and send LAPDm UI message to mobile **/
@@ -156,9 +148,9 @@ int main(void){
 		sleep(3);
 		send_bcch_sys_info_4_msg(sock_mobile);
 		sleep(3);
-		/*send_pch_paging_request_msg(sock_mobile);
-		sleep(3);
 		send_bcch_sys_info_2ter_msg(sock_mobile);
+		sleep(3);
+		/*send_pch_paging_request_msg(sock_mobile);
 		sleep(3);
 		send_lapdm_ui_msg(sock_mobile);
 		sleep(3);
