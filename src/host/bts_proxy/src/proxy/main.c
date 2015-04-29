@@ -140,7 +140,7 @@ void socket_messages_handling(int socket_l2, int socket_bts) {
 						closeApp = 1;
 					}
 				}
-		       }
+
 
 				msg = malloc(sizeof(uint8_t)*msg_len);
 		
