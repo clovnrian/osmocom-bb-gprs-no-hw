@@ -16,8 +16,8 @@
 #include <layer1.h>
 #include <L2toL1int.h>
 #include <L1toL2int.h>
-#include <osmocom/gsm/protocol/gsm_04_08.h>
 #include <osmocom/core/gsmtap.h>
+#include <osmocom/gsm/rsl.h>
 
 uint16_t globalArfcn;		/* ARFCN (frequency) for actual BTS*/
 
@@ -193,8 +193,8 @@ struct l1ctl_info_dl *fill_info_dl_structure(struct gsmtap_hdr *gsmtapHeader, st
 
 	struct l1ctl_info_dl *info_dl = (struct l1ctl_info_dl *) msgb_put(msg, sizeof(struct l1ctl_info_dl));
 
-	info_dl->chan_nr = gsmtapHeader->sub_type;
 	info_dl->link_id = (uint8_t) 0x0;
+	info_dl->chan_nr = chantype_gsmtap2rsl(gsmtapHeader->sub_type, 0);
 	info_dl->band_arfcn = gsmtapHeader->arfcn;
 	info_dl->frame_nr = gsmtapHeader->frame_number;
 	info_dl->rx_level = gsmtapHeader->signal_dbm;
@@ -203,5 +203,48 @@ struct l1ctl_info_dl *fill_info_dl_structure(struct gsmtap_hdr *gsmtapHeader, st
 	info_dl->fire_crc = (uint8_t) 0;
 
 	return info_dl;
+}
+
+/* convert GSMTAP channel number to RSL channel type
+ *  \param[in] gt_chantype GSMTAP channel type
+ *  \param[in] link_id RSL link identifier
+ *  \returns RSL channel type
+ */
+uint8_t chantype_gsmtap2rsl(uint8_t gt_chantype, uint8_t link_id)
+{
+	uint8_t ret = 0;
+
+	//use only lowest 4bits for channel type
+	gt_chantype &= 0x0F;
+
+	switch (gt_chantype) {
+	case GSMTAP_CHANNEL_TCH_F:
+		ret = RSL_CHAN_Bm_ACCHs;
+		break;
+	case GSMTAP_CHANNEL_TCH_H:
+		ret = RSL_CHAN_Lm_ACCHs;
+		break;
+	case GSMTAP_CHANNEL_SDCCH4:
+		ret = RSL_CHAN_SDCCH4_ACCH;
+		break;
+	case GSMTAP_CHANNEL_SDCCH8:
+		ret = RSL_CHAN_SDCCH8_ACCH;
+		break;
+	case GSMTAP_CHANNEL_BCCH:
+		ret = RSL_CHAN_BCCH;
+		break;
+	case GSMTAP_CHANNEL_RACH:
+		ret = RSL_CHAN_RACH;
+		break;
+	case GSMTAP_CHANNEL_PCH:
+		/* it could also be AGCH... */
+		ret = RSL_CHAN_PCH_AGCH;
+		break;
+	}
+
+	/*if (link_id & 0x40)
+		ret |= GSMTAP_CHANNEL_ACCH;*/
+
+	return ret;
 }
 

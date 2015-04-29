@@ -273,8 +273,6 @@ printf("Dropping frame with %u bit errors\n", dl->num_biterr);
 	pp.u.data.chan_nr = dl->chan_nr;
 	pp.u.data.link_id = dl->link_id;
 
-	printf("chan_nr: %d --- link_id: %d\n", pp.u.data.chan_nr, pp.u.data.link_id);
-
 	/* send it up into LAPDm */
 	return lapdm_phsap_up(&pp.oph, le);
 }
@@ -949,8 +947,6 @@ int l1ctl_recv(struct osmocom_ms *ms, struct msgb *msg)
 	int rc = 0;
 	struct l1ctl_hdr *l1h;
 	struct l1ctl_info_dl *dl;
-
-	fprintf(stderr,"RECEIVE MESSAGE\n");
 
 	if (msgb_l2len(msg) < sizeof(*dl)) {
 		LOGP(DL1C, LOGL_ERROR, "Short Layer2 message: %u\n",

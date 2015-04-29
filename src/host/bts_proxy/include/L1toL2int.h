@@ -34,3 +34,6 @@ void l1_to_l2_data_ind(int socket_l2, unsigned char *data, int len);
 
 /** alloc L1CTL to msgb structure **/
 struct msgb *l1ctl_msgb_alloc(uint8_t msg_type, uint8_t flag);
+
+/** convert GSMTAP channel number to RSL channel type **/
+uint8_t chantype_gsmtap2rsl(uint8_t gt_chantype, uint8_t link_id);

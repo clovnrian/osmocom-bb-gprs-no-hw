@@ -121,6 +121,20 @@ void send_pch_paging_request_msg(int sock_mobile){
 	write_to_mobile(sock_mobile, paging, sizeof(*paging), GSMTAP_CHANNEL_PCH);
 }
 
+/** Create and send LAPDm UI message to mobile **/
+void send_lapdm_ui_msg(int sock_mobile){
+	uint8_t data[] = {0x03,0x03,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+
+	//write_to_mobile(sock_mobile, &data, sizeof(data), GSMTAP_CHANNEL_SDCCH4);
+}
+
+/** Create and send LAPDm UI message to mobile **/
+void send_lapdm_ui_system_info_type5_msg(int sock_mobile){
+	uint8_t data[] = {0x05,0x01,0x03,0x03,0x49,0x06,0x1d,0x10,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x80,0x00,0x00,0x00,0x3a,0xe4,0x64};
+
+	write_to_mobile(sock_mobile, &data, sizeof(data), GSMTAP_CHANNEL_SDCCH8);
+}
+
 int main(void){
 	int sock_mobile;
 
@@ -137,6 +151,10 @@ int main(void){
 		sleep(1);
 		send_bcch_sys_info_2ter_msg(sock_mobile);
 		sleep(1);
+		send_lapdm_ui_msg(sock_mobile);
+		sleep(1);
+		send_lapdm_ui_system_info_type5_msg(sock_mobile);
+		sleep(5);
 	}
 
 	return 0;
