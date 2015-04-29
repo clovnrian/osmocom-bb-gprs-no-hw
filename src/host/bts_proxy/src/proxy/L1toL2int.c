@@ -20,6 +20,7 @@
 #include <osmocom/gsm/rsl.h>
 
 uint16_t globalArfcn;		/* ARFCN (frequency) for actual BTS*/
+int globalRxLevel = 0;
 
 /** write message to L2 socket **/
 void write_to_L2(int socket_l2, struct msgb *msg){
@@ -95,7 +96,7 @@ void l1_to_l2_pm_conf(int socket_l2, struct l1ctl_pm_req *pm_req){
 		pm_resp = (struct l1ctl_pm_conf *) msgb_put(msg, sizeof(*pm_resp));
 
 		pm_resp->band_arfcn = htons((uint16_t) i);
-	  	pm_resp->pm[0] = (i == globalArfcn) ? 10 : 0;
+	  	pm_resp->pm[0] = (i == globalArfcn) ? globalRxLevel : 0;
 	  	pm_resp->pm[1] = 0;
 	}
 
@@ -156,7 +157,8 @@ void l1_to_l2_data_ind(int socket_l2, unsigned char *data, int len){
 
 	/* set global ARFCN */
 	globalArfcn = ntohs(gsmtapHeader->arfcn);
-	printf("GLOBAL ARFCN SET TO: %d\n", globalArfcn);
+	globalRxLevel = gsmtapHeader->signal_dbm - 110;
+
 	info_dl = fill_info_dl_structure(gsmtapHeader, msg);
 	data_ind = (struct l1ctl_data_ind *) msgb_put(msg, sizeof(struct l1ctl_data_ind));
 
@@ -199,7 +201,7 @@ struct l1ctl_info_dl *fill_info_dl_structure(struct gsmtap_hdr *gsmtapHeader, st
 	info_dl->chan_nr = chantype_gsmtap2rsl(gsmtapHeader->sub_type, 0);
 	info_dl->band_arfcn = gsmtapHeader->arfcn;
 	info_dl->frame_nr = gsmtapHeader->frame_number;
-	info_dl->rx_level = gsmtapHeader->signal_dbm;
+	info_dl->rx_level = gsmtapHeader->signal_dbm - 110;
 	info_dl->snr = gsmtapHeader->snr_db;
 	info_dl->num_biterr = (uint8_t) 0;
 	info_dl->fire_crc = (uint8_t) 0;
