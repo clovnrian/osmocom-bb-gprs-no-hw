@@ -27,7 +27,8 @@
 
 #define SOCK_PATH_TO_L2 "/tmp/osmocom_l2"
 #define BTS_ADDRESS "127.0.0.1"
-const int BTS_PORT = 19789;
+
+const int BTS_SRC_PORT = 19789;
 
 int closeApp = 0;
 
@@ -84,7 +85,7 @@ int create_socket_bts(){
   memset((char *)&myaddr, 0, sizeof(myaddr)); 
   myaddr.sin_family = AF_INET;
   myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-  myaddr.sin_port = htons(BTS_PORT);
+  myaddr.sin_port = htons(BTS_SRC_PORT);
 
   if (bind(s, &myaddr, sizeof(myaddr)) == -1) {
     perror("Error binding socket");
