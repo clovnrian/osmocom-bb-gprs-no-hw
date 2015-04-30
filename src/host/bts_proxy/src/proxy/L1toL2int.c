@@ -20,8 +20,8 @@
 #include <osmocom/gsm/rsl.h>
 
 uint16_t globalArfcn;		/* ARFCN (frequency) for actual BTS*/
-uint8_t globalRxLevel = 238;
-uint8_t globalSnrLevel = 209;
+uint8_t globalRxLevel = 63;
+uint8_t globalSnrLevel = 40;
 
 /** write message to L2 socket **/
 void write_to_L2(int socket_l2, struct msgb *msg){
@@ -127,7 +127,7 @@ void l1_to_l2_fbsb_conf(int socket_l2, struct l1ctl_fbsb_req *fbsb_req){
 	if(arfcn == globalArfcn){
 		fbsb_resp->result = (uint8_t) 0;
 		info_dl->rx_level = globalRxLevel;
-		info_dl->snr = 10;
+		info_dl->snr = globalSnrLevel;
 	}
 
 	write_to_L2(socket_l2, msg);

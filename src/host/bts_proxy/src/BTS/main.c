@@ -15,6 +15,8 @@
 #include "bts.h"
 
 #define MOBILE_ADDR "127.0.0.1"
+const int MOBILE_DST_PORT = 19789;
+const int BTS_SRC_PORT = 19876;
 
 int lastFrameNumber = 1780600;
 uint16_t BTS_ARFCN = 17;
@@ -33,7 +35,7 @@ int create_socket(){
   memset((char *)&myaddr, 0, sizeof(myaddr)); 
   myaddr.sin_family = AF_INET; 
   myaddr.sin_addr.s_addr = htonl(INADDR_ANY); 
-  myaddr.sin_port = htons(19876);
+  myaddr.sin_port = htons(BTS_SRC_PORT);
   if (bind(s, (struct sockaddr *)&myaddr, sizeof(myaddr)) == -1) {
     perror("Error binding socket");
     exit(1);
@@ -64,7 +66,7 @@ void write_to_mobile(int socket_mobile, uint8_t *data, int size, uint8_t channel
 
 	memset((char *) &mobile, 0, sizeof(mobile));
         mobile.sin_family = AF_INET;
-        mobile.sin_port = htons(4729);
+        mobile.sin_port = htons(MOBILE_DST_PORT);
         if (inet_aton(MOBILE_ADDR, &mobile.sin_addr)==0) {
           fprintf(stderr, "inet_aton() failed\n");
           exit(1);
