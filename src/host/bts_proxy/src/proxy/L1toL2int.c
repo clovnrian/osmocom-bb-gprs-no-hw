@@ -20,8 +20,8 @@
 #include <osmocom/gsm/rsl.h>
 
 uint16_t globalArfcn;		/* ARFCN (frequency) for actual BTS*/
-uint8_t globalRxLevel = 63;
-uint8_t globalSnrLevel = 40;
+uint8_t globalRxLevel = 55;
+uint8_t globalSnrLevel = 15;
 
 /** write message to L2 socket **/
 void write_to_L2(int socket_l2, struct msgb *msg){
@@ -96,9 +96,15 @@ void l1_to_l2_pm_conf(int socket_l2, struct l1ctl_pm_req *pm_req){
 
 		pm_resp = (struct l1ctl_pm_conf *) msgb_put(msg, sizeof(*pm_resp));
 
-		pm_resp->band_arfcn = htons((uint16_t) i);
-	  	pm_resp->pm[0] = (i == globalArfcn) ? globalRxLevel : 0;
-	  	pm_resp->pm[1] = 0;
+		if(i == globalArfcn || i == 1 || i == 26){
+			pm_resp->band_arfcn = htons((uint16_t) i);
+			pm_resp->pm[0] = globalRxLevel;
+			pm_resp->pm[1] = 0;
+		} else {
+			pm_resp->band_arfcn = htons((uint16_t) i);
+			pm_resp->pm[0] = 0;
+			pm_resp->pm[1] = 0;
+		}
 	}
 
 
@@ -128,6 +134,7 @@ void l1_to_l2_fbsb_conf(int socket_l2, struct l1ctl_fbsb_req *fbsb_req){
 		fbsb_resp->result = (uint8_t) 0;
 		info_dl->rx_level = globalRxLevel;
 		info_dl->snr = globalSnrLevel;
+		fbsb_resp->bsic = 29;
 	}
 
 	write_to_L2(socket_l2, msg);

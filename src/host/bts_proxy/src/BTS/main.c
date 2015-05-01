@@ -122,6 +122,13 @@ void send_pch_paging_request_msg(int sock_mobile){
 	write_to_mobile(sock_mobile, data, sizeof(data), GSMTAP_CHANNEL_PCH);
 }
 
+/** Create and send PCH message to mobile **/
+void send_pch_paging_msg(int sock_mobile){
+	uint8_t data[] = {0x01,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b,0x2b};
+
+	write_to_mobile(sock_mobile, data, sizeof(data), GSMTAP_CHANNEL_PCH);
+}
+
 /** Create and send LAPDm UI message to mobile **/
 void send_lapdm_ui_msg(int sock_mobile){
 	uint8_t data[] = {0x03,0x03,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
@@ -142,15 +149,16 @@ int main(void){
 	sock_mobile = create_socket();
 
 	while(1){
-		send_bcch_sys_info_1_msg(sock_mobile);
-		sleep(3);
-		send_bcch_sys_info_2_msg(sock_mobile);
-		sleep(3);
 		send_bcch_sys_info_3_msg(sock_mobile);
-		sleep(3);
+		sleep(1);
 		send_bcch_sys_info_4_msg(sock_mobile);
-		sleep(3);
-		send_bcch_sys_info_2ter_msg(sock_mobile);
+		sleep(1);
+		send_bcch_sys_info_1_msg(sock_mobile);
+		sleep(1);
+		send_bcch_sys_info_2_msg(sock_mobile);
+		sleep(1);
+		send_pch_paging_msg(sock_mobile);
+		//send_bcch_sys_info_2ter_msg(sock_mobile);
 		sleep(3);
 		/*send_pch_paging_request_msg(sock_mobile);
 		sleep(3);

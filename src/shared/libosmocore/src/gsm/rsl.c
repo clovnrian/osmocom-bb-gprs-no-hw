@@ -23,7 +23,6 @@
 
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <errno.h>
 
 #include <osmocom/gsm/tlv.h>
@@ -175,8 +174,6 @@ int rsl_dec_chan_nr(uint8_t chan_nr, uint8_t *type, uint8_t *subch, uint8_t *tim
 {
 	*timeslot = chan_nr & 0x7;
 
-	
-
 	if ((chan_nr & 0xf8) == RSL_CHAN_Bm_ACCHs) {
 		*type = RSL_CHAN_Bm_ACCHs;
 		*subch = 0;
@@ -190,7 +187,6 @@ int rsl_dec_chan_nr(uint8_t chan_nr, uint8_t *type, uint8_t *subch, uint8_t *tim
 		*type = RSL_CHAN_SDCCH8_ACCH;
 		*subch = (chan_nr >> 3) & 0x7;
 	} else if ((chan_nr & 0xf8) == RSL_CHAN_BCCH) {
-		
 		*type = RSL_CHAN_BCCH;
 		*subch = 0;
 	} else if ((chan_nr & 0xf8) == RSL_CHAN_RACH) {
@@ -199,10 +195,8 @@ int rsl_dec_chan_nr(uint8_t chan_nr, uint8_t *type, uint8_t *subch, uint8_t *tim
 	} else if ((chan_nr & 0xf8) == RSL_CHAN_PCH_AGCH) {
 		*type = RSL_CHAN_PCH_AGCH;
 		*subch = 0;
-	} else {
-		
+	} else
 		return -EINVAL;
-	}
 
 	return 0;
 }
