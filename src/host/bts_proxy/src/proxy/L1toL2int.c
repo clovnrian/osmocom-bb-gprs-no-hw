@@ -96,15 +96,15 @@ void l1_to_l2_pm_conf(int socket_l2, struct l1ctl_pm_req *pm_req){
 
 		pm_resp = (struct l1ctl_pm_conf *) msgb_put(msg, sizeof(*pm_resp));
 
-		//if(i == globalArfcn || i == 1 || i == 26){
+		if(i == globalArfcn || i == 1 || i == 26){
 			pm_resp->band_arfcn = htons((uint16_t) i);
 			pm_resp->pm[0] = globalRxLevel + (rand() % 20);
 			pm_resp->pm[1] = 0;
-		/*} else {
+		} else {
 			pm_resp->band_arfcn = htons((uint16_t) i);
 			pm_resp->pm[0] = 0;
 			pm_resp->pm[1] = 0;
-		}*/
+		}
 	}
 
 
