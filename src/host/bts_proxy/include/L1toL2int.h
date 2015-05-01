@@ -37,3 +37,6 @@ struct msgb *l1ctl_msgb_alloc(uint8_t msg_type, uint8_t flag);
 
 /** convert GSMTAP channel number to RSL channel type **/
 uint8_t chantype_gsmtap2rsl(uint8_t gt_chantype, uint8_t link_id);
+
+/** transmit L1CTL_NEIGH_PM_CONF message **/
+void l1_to_l2_neight_pm_conf(int socket_l2, struct l1ctl_neigh_pm_req *pm_req);

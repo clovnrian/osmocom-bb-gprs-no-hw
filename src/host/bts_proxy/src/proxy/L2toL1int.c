@@ -43,6 +43,9 @@ void switch_L2_messages(int socket_l2, uint8_t *msg){
 					case L1CTL_PARAM_REQ:
 						//l1_to_l2_param_conf(socket_l2, (struct l1ctl_info_dl *)hdr->data);
 						break;
+					case L1CTL_NEIGH_PM_REQ:
+						l1_to_l2_neight_pm_conf(socket_l2, (struct l1ctl_info_dl *)hdr->data);
+						break;
 					default:
 					  printf("Unhandled message type number %u\n",hdr->msg_type);
 					  break;

@@ -111,6 +111,27 @@ void l1_to_l2_pm_conf(int socket_l2, struct l1ctl_pm_req *pm_req){
 	write_to_L2(socket_l2, msg);
 }
 
+/** transmit L1CTL_NEIGH_PM_CONF message **/
+void l1_to_l2_neight_pm_conf(int socket_l2, struct l1ctl_neigh_pm_req *pm_req){
+	struct msgb *msg;
+	struct l1ctl_neigh_pm_ind *pm_resp;
+	srand(time(NULL));
+	int i;
+	uint8_t flag;
+
+	msg = l1ctl_msgb_alloc(L1CTL_NEIGH_PM_IND,0);
+
+	for (i = 0; i < pm_req->n; i++) {
+		pm_resp = (struct l1ctl_neigh_pm_ind *) msgb_put(msg, sizeof(*pm_resp));
+		pm_resp->band_arfcn = htons(pm_req->band_arfcn[i]);
+		pm_resp->tn = pm_req->tn[i];
+		pm_resp->pm[0] = globalRxLevel + (rand() % 20);
+		pm_resp->pm[1] = 0;
+	}
+
+	write_to_L2(socket_l2, msg);
+}
+
 /** transmit L1CTL_FBSB_CONF message **/
 void l1_to_l2_fbsb_conf(int socket_l2, struct l1ctl_fbsb_req *fbsb_req){
 	struct msgb *msg = l1ctl_msgb_alloc(L1CTL_FBSB_CONF,0);
