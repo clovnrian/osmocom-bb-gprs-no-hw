@@ -146,7 +146,7 @@ void socket_messages_handling(int socket_l2, int socket_bts) {
 		
 				/** receive data **/
 				if ((len=recv(fds[i].fd, msg, htons(msg_len), 0)) > 0) {
-					switch_L2_messages(socket_l2, msg);	//message from L2
+					switch_L2_messages(socket_l2, socket_bts, msg);	//message from L2
 				}
 			   }
 			}

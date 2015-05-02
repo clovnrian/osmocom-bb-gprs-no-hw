@@ -5,7 +5,7 @@ LDFLAGS = -o
 OSMOPATH = 
 LIBOSMOCORE = -losmocore
 
-OBJ = proxy.o L2toL1int.o L1toL2int.o btsToMobile.o
+OBJ = proxy.o L2toL1int.o L1toL2int.o btsToMobile.o L1ToBts.o
 BTS_OBJ = BTS.o
 
 .PHONY: all
@@ -32,6 +32,9 @@ L2toL1int.o: proxy/L2toL1int.c
 
 btsToMobile.o: proxy/btsToMobile.c 
 	$(CC) $(CFLAGS) -o btsToMobile.o proxy/btsToMobile.c
+	
+L1ToBts.o: proxy/L1ToBts.c 
+	$(CC) $(CFLAGS) -o L1ToBts.o proxy/L1ToBts.c
 
 .PHONY: clean
 

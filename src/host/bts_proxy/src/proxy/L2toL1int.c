@@ -14,10 +14,11 @@
 #include <layer1.h>
 #include <L2toL1int.h>
 #include <L1toL2int.h>
+#include <L1ToBts.h>
 #include <osmocom/core/msgb.h>
 
 /** Receive and switch messages from L2 **/
-void switch_L2_messages(int socket_l2, uint8_t *msg){
+void switch_L2_messages(int socket_l2, int socket_bts, uint8_t *msg){
 	struct l1ctl_hdr *hdr;
 
 				hdr = (struct l1ctl_hdr *) msg;
@@ -45,6 +46,9 @@ void switch_L2_messages(int socket_l2, uint8_t *msg){
 						break;
 					case L1CTL_NEIGH_PM_REQ:
 						l1_to_l2_neight_pm_conf(socket_l2, (struct l1ctl_info_dl *)hdr->data);
+						break;
+					case L1CTL_RACH_REQ:
+						l1_to_bts_rach_req(socket_bts, (struct l1ctl_info_dl *)hdr->data);
 						break;
 					default:
 					  printf("Unhandled message type number %u\n",hdr->msg_type);

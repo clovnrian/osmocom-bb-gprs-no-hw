@@ -1203,12 +1203,12 @@ static int gsm48_mm_cell_selected(struct osmocom_ms *ms, struct msgb *msg)
 	struct gsm_settings *set = &ms->settings;
 
 	/* no SIM is inserted */
-	if (!subscr->sim_valid) {
+	/*if (!subscr->sim_valid) {
 		LOGP(DMM, LOGL_INFO, "SIM invalid as cell is selected.\n");
 		new_mm_state(mm, GSM48_MM_ST_MM_IDLE, GSM48_MM_SST_NO_IMSI);
 
 		return 0;
-	}
+	}*/
 
 	/* SIM not updated in this LA */
 	if (subscr->ustate == GSM_SIM_U1_UPDATED

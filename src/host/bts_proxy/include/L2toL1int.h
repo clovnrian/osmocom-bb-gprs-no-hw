@@ -16,6 +16,6 @@
 void write_to_L1(int socket_bts);
 
 /** Receive and switch messages from L2 **/
-void switch_L2_messages(int socket_l2, uint8_t *msg);
+void switch_L2_messages(int socket_l2, int socket_bts, uint8_t *msg);
 
 
