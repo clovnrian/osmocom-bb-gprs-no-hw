@@ -1884,7 +1884,7 @@ static int gsm322_cs_select(struct osmocom_ms *ms, int index, uint16_t mcc,
 		}
 
 		/* if we have no access to the cell and we don't override */
-		if (!subscr->acc_barr
+		/*if (!subscr->acc_barr
 		 && !(acc_class & (s->class_barr ^ 0xffff))) {
 			LOGP(DCS, LOGL_INFO, "Skip ARFCN %s: Class is "
 				"barred for our access. (access=%04x "
@@ -1892,7 +1892,7 @@ static int gsm322_cs_select(struct osmocom_ms *ms, int index, uint16_t mcc,
 				gsm_print_arfcn(index2arfcn(i)),
 				acc_class, s->class_barr);
 			continue;
-		}
+		}*/
 
 		/* store temporary available and allowable flag */
 		cs->list[i].flags |= GSM322_CS_FLAG_TEMP_AA;
