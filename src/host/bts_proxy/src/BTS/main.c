@@ -122,13 +122,6 @@ void send_lapdm_ui_system_info_type6_msg(int sock_mobile){
 	write_to_mobile(sock_mobile, &data, sizeof(data), 0x87);
 }
 
-/** Create and send LAPDm measurement report message to mobile **/
-void send_lapdm_measurement_report_msg(int sock_mobile){
-	uint8_t data[] = {0x13,0x00,0x03,0x03,0x49,0x06,0x15,0x3f,0x3f,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-
-	write_to_mobile(sock_mobile, &data, sizeof(data), 0x87);
-}
-
 int main(void){
 	int sock_mobile;
 
@@ -144,11 +137,9 @@ int main(void){
 		send_bcch_sys_info_2_msg(sock_mobile);
 		sleep(1);
 		send_lapdm_ui_system_info_type5_msg(sock_mobile);
-		sleep(1);
+		sleep(2);
 		send_lapdm_ui_system_info_type6_msg(sock_mobile);
-		sleep(1);
-		send_lapdm_measurement_report_msg(sock_mobile);
-		sleep(3);
+		sleep(2);
 	}
 
 	return 0;

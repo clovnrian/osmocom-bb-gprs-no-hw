@@ -29,7 +29,7 @@ void write_to_bts(int socket_bts, struct msgb *msg){
            printf("Error on sending data to mobile\n");
 	else printf("Data sended\n");
 
-	msgb_free(msg);
+	//msgb_free(msg);
 }
 
 /** transmit RACH TEQ to BTS **/
@@ -47,7 +47,7 @@ void l1_to_bts_rach_req(int socket_bts, struct l1ctl_info_dl *ul){
 		  ul->rx_level,
 		  ul->snr,
 		  data,
-		  sizeof(data)
+		  1
 		);
 
 	write_to_bts(socket_bts, msg);

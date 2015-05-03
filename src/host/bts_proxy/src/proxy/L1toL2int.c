@@ -19,7 +19,7 @@
 #include <osmocom/core/gsmtap.h>
 #include <osmocom/gsm/rsl.h>
 
-uint16_t globalArfcn;		/* ARFCN (frequency) for actual BTS*/
+uint16_t globalArfcn = 51;		/* ARFCN (frequency) for actual BTS*/
 uint8_t globalRxLevel = 55;
 uint8_t globalSnrLevel = 15;
 
@@ -96,7 +96,7 @@ void l1_to_l2_pm_conf(int socket_l2, struct l1ctl_pm_req *pm_req){
 
 		pm_resp = (struct l1ctl_pm_conf *) msgb_put(msg, sizeof(*pm_resp));
 
-		if(i == globalArfcn || i == 1 || i == 26){
+		if(globalArfcn > 0 && i == globalArfcn){
 			pm_resp->band_arfcn = htons((uint16_t) i);
 			pm_resp->pm[0] = globalRxLevel + (rand() % 20);
 			pm_resp->pm[1] = 0;
@@ -151,7 +151,7 @@ void l1_to_l2_fbsb_conf(int socket_l2, struct l1ctl_fbsb_req *fbsb_req){
 	fbsb_resp->result = (uint8_t) 255;
 	fbsb_resp->bsic = (uint8_t) 0;
 	
-	if(arfcn == globalArfcn){
+	if(globalArfcn > 0 && arfcn == globalArfcn){
 		fbsb_resp->result = (uint8_t) 0;
 		info_dl->rx_level = globalRxLevel;
 		info_dl->snr = globalSnrLevel;
