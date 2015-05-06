@@ -12,7 +12,6 @@
 #include <unistd.h>
 #include <poll.h>
 #include <l1ctl_proto.h>
-#include <layer1.h>
 #include <L1toL2int.h>
 
 /** Receive and switch messages from BTS **/

@@ -43,3 +43,4 @@ clean:
 	rm -f proxy/proxy
 	rm -f BTS/*.o
 	rm -f BTS/BTS
+	rm -f *.o

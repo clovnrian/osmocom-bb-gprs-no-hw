@@ -3,9 +3,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <l1ctl_proto.h>
 #include <osmocom/core/gsmtap.h>
 #include <osmocom/core/gsmtap_util.h>
+#include <link_info.h>
 
 #define BTS_DST_IP '127.0.0.1'
 
@@ -33,19 +36,25 @@ void write_to_bts(int socket_bts, struct msgb *msg){
 }
 
 /** transmit RACH TEQ to BTS **/
-void l1_to_bts_rach_req(int socket_bts, struct l1ctl_info_dl *ul){
+void l1_to_bts_rach_req(int socket_bts, struct l1ctl_info_ul *ul){
 	struct l1ctl_rach_req *rach_req = (struct l1ctl_rach_req *) ul->payload;
 	struct msgb *msg;
-	uint8_t data[] = {0x80};
+	uint8_t data[2];
+	uint16_t info;
+
+	data[0] = 0;
+	data[1] = rach_req->ra;
+
+	info = ((uint16_t)(data[0])) | ((uint16_t)(data[1])<<8);
 
 	msg = gsmtap_makemsg(
-		  ul->band_arfcn,
+		  globalArfcn,
 		  0,
 		  GSMTAP_CHANNEL_RACH,
 		  0,
-		  ul->frame_nr,
-		  ul->rx_level,
-		  ul->snr,
+		  0,
+		  0,
+		  0,
 		  data,
 		  1
 		);

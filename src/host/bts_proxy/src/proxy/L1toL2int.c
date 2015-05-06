@@ -13,15 +13,11 @@
 #include <time.h>
 #include <poll.h>
 #include <l1ctl_proto.h>
-#include <layer1.h>
 #include <L2toL1int.h>
 #include <L1toL2int.h>
 #include <osmocom/core/gsmtap.h>
 #include <osmocom/gsm/rsl.h>
-
-uint16_t globalArfcn = 51;		/* ARFCN (frequency) for actual BTS*/
-uint8_t globalRxLevel = 55;
-uint8_t globalSnrLevel = 15;
+#include <link_info.h>
 
 /** write message to L2 socket **/
 void write_to_L2(int socket_l2, struct msgb *msg){
@@ -162,10 +158,9 @@ void l1_to_l2_fbsb_conf(int socket_l2, struct l1ctl_fbsb_req *fbsb_req){
 }
 
 /** transmit L1CTL_CCCH_MODE_CONF message **/
-void l1_to_l2_ccch_mode_conf(int socket_l2, struct l1ctl_info_dl *info_dl){
+void l1_to_l2_ccch_mode_conf(int socket_l2, struct l1ctl_ccch_mode_req *ccch_req){
 	struct msgb *msg = l1ctl_msgb_alloc(L1CTL_CCCH_MODE_CONF,0);
 	struct l1ctl_ccch_mode_conf *ccch_conf;
-	struct l1ctl_ccch_mode_req *ccch_req = info_dl->payload;
 
 	ccch_conf = (struct l1ctl_ccch_mode_conf *) msgb_put(msg, sizeof(*ccch_conf));
 	

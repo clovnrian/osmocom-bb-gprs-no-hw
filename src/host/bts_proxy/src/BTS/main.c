@@ -112,14 +112,14 @@ void send_bcch_sys_info_1_msg(int sock_mobile){
 void send_lapdm_ui_system_info_type5_msg(int sock_mobile){
 	uint8_t data[] = {0x13,0x00,0x03,0x13,0x49,0x06,0x1d,0x8e,0x13,0xa8,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
-	write_to_mobile(sock_mobile, &data, sizeof(data), 0x87);
+	write_to_mobile(sock_mobile, &data, sizeof(data), 0x07);
 }
 
 /** Create and send LAPDm UI message to mobile **/
 void send_lapdm_ui_system_info_type6_msg(int sock_mobile){
 	uint8_t data[] = {0x13,0x00,0x03,0x13,0x2d,0x06,0x1e,0x00,0x0a,0x00,0xf1,0x10,0x03,0xe8,0x2f,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
-	write_to_mobile(sock_mobile, &data, sizeof(data), 0x87);
+	write_to_mobile(sock_mobile, &data, sizeof(data), 0x07);
 }
 
 int main(void){
@@ -129,17 +129,17 @@ int main(void){
 
 	while(1){
 		send_bcch_sys_info_3_msg(sock_mobile);
-		sleep(1);
+		usleep(500000);
 		send_bcch_sys_info_4_msg(sock_mobile);
-		sleep(1);
+		usleep(500000);
 		send_bcch_sys_info_1_msg(sock_mobile);
-		sleep(1);
+		usleep(500000);
 		send_bcch_sys_info_2_msg(sock_mobile);
-		sleep(1);
+		usleep(500000);
 		send_lapdm_ui_system_info_type5_msg(sock_mobile);
-		sleep(2);
+		usleep(500000);
 		send_lapdm_ui_system_info_type6_msg(sock_mobile);
-		sleep(2);
+		sleep(3);
 	}
 
 	return 0;
