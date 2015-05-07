@@ -32,7 +32,7 @@ void write_to_bts(int socket_bts, struct msgb *msg){
            printf("Error on sending data to mobile\n");
 	else printf("Data sended\n");
 
-	//msgb_free(msg);
+	msgb_free(msg);
 }
 
 /** transmit RACH TEQ to BTS **/
@@ -40,12 +40,12 @@ void l1_to_bts_rach_req(int socket_bts, struct l1ctl_info_ul *ul){
 	struct l1ctl_rach_req *rach_req = (struct l1ctl_rach_req *) ul->payload;
 	struct msgb *msg;
 	uint8_t data[2];
-	uint16_t info;
+	uint16_t info[1];
 
 	data[0] = 0;
 	data[1] = rach_req->ra;
 
-	info = ((uint16_t)(data[0])) | ((uint16_t)(data[1])<<8);
+	info[0] = ((uint16_t)(data[0])) | ((uint16_t)(data[1])<<8);
 
 	msg = gsmtap_makemsg(
 		  globalArfcn,
@@ -55,8 +55,8 @@ void l1_to_bts_rach_req(int socket_bts, struct l1ctl_info_ul *ul){
 		  0,
 		  0,
 		  0,
-		  data,
-		  1
+		  info,
+		  sizeof(uint16_t)
 		);
 
 	write_to_bts(socket_bts, msg);
