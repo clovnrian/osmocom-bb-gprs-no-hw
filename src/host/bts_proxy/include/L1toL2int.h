@@ -24,7 +24,7 @@ void l1_to_l2_pm_conf(int socket_l2, struct l1ctl_pm_req *pm_req);
 void l1_to_l2_fbsb_conf(int socket_l2, struct l1ctl_fbsb_req *fbsb_req);
 
 /** transmit L1CTL_CCCH_MODE_CONF message **/
-void l1_to_l2_ccch_mode_conf(int socket_l2, struct l1ctl_info_dl *info_dl);
+void l1_to_l2_ccch_mode_conf(int socket_l2, struct l1ctl_ccch_mode_req *ccch_req);
 
 /** Fill info_dl structure with data **/
 struct l1ctl_info_dl *fill_info_dl_structure(struct gsmtap_hdr *gsmtapHeader, struct msgb *msg);

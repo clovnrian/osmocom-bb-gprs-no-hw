@@ -2227,23 +2227,23 @@ static int gsm48_mm_loc_upd_normal(struct osmocom_ms *ms, struct msgb *msg)
 	}
 
 	/* no location update, if limited service */
-	if (cs->state != GSM322_C3_CAMPED_NORMALLY) {
+	/*if (cs->state != GSM322_C3_CAMPED_NORMALLY) {
 		LOGP(DMM, LOGL_INFO, "Loc. upd. not allowed.\n");
 
 #if 0
 		/* don't send message, if we got not triggered by PLMN search */
-		if (!msg)
-			return 0;
-#endif
+		//if (!msg)
+			//return 0;
+//#endif
 
 		/* send message to PLMN search process */
-		nmsg = gsm322_msgb_alloc(GSM322_EVENT_REG_FAILED);
+		/*nmsg = gsm322_msgb_alloc(GSM322_EVENT_REG_FAILED);
 		if (!nmsg)
 			return -ENOMEM;
 		gsm322_plmn_sendmsg(ms, nmsg);
 
 		return 0;
-	}
+	}*/
 
 	/* if location update is not required */
 	if (subscr->ustate == GSM_SIM_U1_UPDATED

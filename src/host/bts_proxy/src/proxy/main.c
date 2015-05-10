@@ -1,5 +1,5 @@
 /*
- * File: layer1.c
+ * File: main.c
  * Date: 10.11.2013
  * Autor: Bc. Miroslav Babják, xbabjak@fiit.stuba.sk
  * Project: Emulator of GPRS modem
@@ -24,11 +24,17 @@
 #include <L1toL2int.h>
 #include <L2toL1int.h>
 #include <btsToMobile.h>
+#include <link_info.h>
 
 #define SOCK_PATH_TO_L2 "/tmp/osmocom_l2"
 #define BTS_ADDRESS "127.0.0.1"
+#define MAIN_FILE
 
 const int BTS_SRC_PORT = 19789;
+
+uint16_t globalArfcn = 51;		/* ARFCN (frequency) for actual BTS*/
+uint8_t globalRxLevel = 55;
+uint8_t globalSnrLevel = 15;
 
 int closeApp = 0;
 

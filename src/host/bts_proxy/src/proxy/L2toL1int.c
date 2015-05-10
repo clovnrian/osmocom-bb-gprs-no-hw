@@ -11,7 +11,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <l1ctl_proto.h>
-#include <layer1.h>
 #include <L2toL1int.h>
 #include <L1toL2int.h>
 #include <L1ToBts.h>
@@ -39,7 +38,7 @@ void switch_L2_messages(int socket_l2, int socket_bts, uint8_t *msg){
 						l1_to_l2_fbsb_conf(socket_l2, (struct ll1ctl_fbsb_req *)hdr->data);
 						break;
 					case L1CTL_CCCH_MODE_REQ:
-						l1_to_l2_ccch_mode_conf(socket_l2, (struct l1ctl_info_dl *)hdr->data);
+						l1_to_l2_ccch_mode_conf(socket_l2, (struct l1ctl_ccch_mode_req *)hdr->data);
 						break;
 					case L1CTL_PARAM_REQ:
 						//l1_to_l2_param_conf(socket_l2, (struct l1ctl_info_dl *)hdr->data);
