@@ -32,7 +32,7 @@ void write_to_bts(int socket_bts, struct msgb *msg){
 	//msgb_free(msg);
 }
 
-/** transmit RACH TEQ to BTS **/
+/** transmit RACH REQ to BTS **/
 void l1_to_bts_rach_req(int socket_bts, struct l1ctl_info_dl *ul){
 	struct l1ctl_rach_req *rach_req = (struct l1ctl_rach_req *) ul->payload;
 	struct msgb *msg;

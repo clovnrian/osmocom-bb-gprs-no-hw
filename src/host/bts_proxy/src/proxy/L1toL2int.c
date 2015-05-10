@@ -13,7 +13,6 @@
 #include <time.h>
 #include <poll.h>
 #include <l1ctl_proto.h>
-#include <layer1.h>
 #include <L2toL1int.h>
 #include <L1toL2int.h>
 #include <osmocom/core/gsmtap.h>
@@ -169,7 +168,7 @@ void l1_to_l2_ccch_mode_conf(int socket_l2, struct l1ctl_info_dl *info_dl){
 
 	ccch_conf = (struct l1ctl_ccch_mode_conf *) msgb_put(msg, sizeof(*ccch_conf));
 	
-	ccch_conf->ccch_mode = ccch_req->ccch_mode;
+	ccch_conf->ccch_mode = 2;
 	ccch_conf->padding[0] = 0;
 	ccch_conf->padding[1] = 0;
 	ccch_conf->padding[2] = 0;
