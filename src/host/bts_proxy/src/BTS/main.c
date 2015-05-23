@@ -16,7 +16,7 @@
 
 #define MOBILE_ADDR "127.0.0.1"
 const int MOBILE_DST_PORT = 19789;
-const int BTS_SRC_PORT = 19876;
+const int BTS_SRC_PORT = 18789;
 
 int lastFrameNumber = 0;
 uint16_t BTS_ARFCN = 51;
