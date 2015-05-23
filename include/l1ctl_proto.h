@@ -56,6 +56,7 @@ enum {
 	L1CTL_TRAFFIC_REQ,
 	L1CTL_TRAFFIC_CONF,
 	L1CTL_TRAFFIC_IND,
+	L1CTL_GPRS_DATA_IND,
 };
 
 enum ccch_mode {

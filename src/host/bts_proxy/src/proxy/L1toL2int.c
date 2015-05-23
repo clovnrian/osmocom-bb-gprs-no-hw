@@ -173,14 +173,10 @@ void l1_to_l2_ccch_mode_conf(int socket_l2, struct l1ctl_ccch_mode_req *ccch_req
 }
 
 /* transmit L1CTL_DATA_IND message */
-void l1_to_l2_data_ind(int socket_l2, unsigned char *data, int len){
+void l1_to_l2_data_ind(int socket_l2, unsigned char *data, int len, struct gsmtap_hdr *gsmtapHeader){
 	struct msgb *msg = l1ctl_msgb_alloc(L1CTL_DATA_IND, 0);
 	struct l1ctl_data_ind *data_ind;
 	struct l1ctl_info_dl *info_dl;
-	struct gsmtap_hdr *gsmtapHeader = malloc(sizeof(struct gsmtap_hdr));
-
-	/* fill the gsmtap header from incoming msg */
-	memcpy(gsmtapHeader, data, sizeof(struct gsmtap_hdr));
 
 	/* set global ARFCN */
 	globalArfcn = ntohs(gsmtapHeader->arfcn);
@@ -191,8 +187,6 @@ void l1_to_l2_data_ind(int socket_l2, unsigned char *data, int len){
 	memcpy(&data_ind->data, data + sizeof(struct gsmtap_hdr), len - sizeof(struct gsmtap_hdr));
 
 	write_to_L2(socket_l2, msg);
-
-	free(gsmtapHeader);
 }
 
 /** Alloc L1CTL message **/

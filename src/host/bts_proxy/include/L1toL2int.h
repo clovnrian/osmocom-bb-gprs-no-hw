@@ -30,7 +30,7 @@ void l1_to_l2_ccch_mode_conf(int socket_l2, struct l1ctl_ccch_mode_req *ccch_req
 struct l1ctl_info_dl *fill_info_dl_structure(struct gsmtap_hdr *gsmtapHeader, struct msgb *msg);
 
 /* transmit L1CTL_DATA_IND message */
-void l1_to_l2_data_ind(int socket_l2, unsigned char *data, int len);
+void l1_to_l2_data_ind(int socket_l2, unsigned char *data, int len, struct gsmtap_hdr *gsmtapHeader);
 
 /** alloc L1CTL to msgb structure **/
 struct msgb *l1ctl_msgb_alloc(uint8_t msg_type, uint8_t flag);
