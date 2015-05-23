@@ -40,3 +40,6 @@ uint8_t chantype_gsmtap2rsl(uint8_t gt_chantype, uint8_t link_id);
 
 /** transmit L1CTL_NEIGH_PM_CONF message **/
 void l1_to_l2_neight_pm_conf(int socket_l2, struct l1ctl_neigh_pm_req *pm_req);
+
+/** transmit L1CTL_RACH_CONF message **/
+void l1_to_l2_rach_conf(int socket_l2, struct l1ctl_info_dl *ul);

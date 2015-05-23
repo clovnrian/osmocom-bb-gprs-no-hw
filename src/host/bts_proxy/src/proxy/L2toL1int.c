@@ -48,6 +48,7 @@ void switch_L2_messages(int socket_l2, int socket_bts, uint8_t *msg){
 						break;
 					case L1CTL_RACH_REQ:
 						l1_to_bts_rach_req(socket_bts, (struct l1ctl_info_dl *)hdr->data);
+						l1_to_l2_rach_conf(socket_l2, (struct l1ctl_info_dl *)hdr->data);
 						break;
 					default:
 					  printf("Unhandled message type number %u\n",hdr->msg_type);

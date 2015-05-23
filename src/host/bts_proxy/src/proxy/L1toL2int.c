@@ -195,6 +195,20 @@ void l1_to_l2_data_ind(int socket_l2, unsigned char *data, int len){
 	free(gsmtapHeader);
 }
 
+/* transmit L1CTL_RACH_CONF message */
+void l1_to_l2_rach_conf(int socket_l2, struct l1ctl_info_dl *ul){
+	struct msgb *msg = l1ctl_msgb_alloc(L1CTL_RACH_CONF, 0);
+	struct l1ctl_info_dl *info_dl = (struct l1ctl_info_dl *) msgb_put(msg, sizeof(*info_dl));
+
+	srand(time(NULL));
+
+	info_dl->band_arfcn = ul->band_arfcn;
+	info_dl->frame_nr = ul->frame_nr;
+	info_dl->snr = ul->snr;
+
+	write_to_L2(socket_l2, msg);
+}
+
 /** Alloc L1CTL message **/
 struct msgb *l1ctl_msgb_alloc(uint8_t msg_type, uint8_t flag){
 	struct msgb *msg;
