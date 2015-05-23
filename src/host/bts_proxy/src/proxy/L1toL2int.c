@@ -189,6 +189,20 @@ void l1_to_l2_data_ind(int socket_l2, unsigned char *data, int len, struct gsmta
 	write_to_L2(socket_l2, msg);
 }
 
+/* transmit L1CTL_GPRS_DATA_IND message */
+void l1_to_l2_gprs_data_ind(int socket_l2, unsigned char *data, int len, struct gsmtap_hdr *gsmtapHeader){
+	struct msgb *msg = l1ctl_msgb_alloc(L1CTL_GPRS_DATA_IND, 0);
+	struct l1ctl_gprs_data_ind *data_ind;
+	struct l1ctl_info_dl *info_dl;
+
+	info_dl = fill_info_dl_structure(gsmtapHeader, msg);
+	data_ind = (struct l1ctl_gprs_data_ind *) msgb_put(msg, sizeof(struct l1ctl_gprs_data_ind));
+
+	memcpy(&data_ind->data, data + sizeof(struct gsmtap_hdr), len - sizeof(struct gsmtap_hdr));
+
+	write_to_L2(socket_l2, msg);
+}
+
 /** Alloc L1CTL message **/
 struct msgb *l1ctl_msgb_alloc(uint8_t msg_type, uint8_t flag){
 	struct msgb *msg;

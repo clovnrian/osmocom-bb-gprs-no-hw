@@ -135,6 +135,11 @@ struct l1ctl_data_ind {
 	uint8_t data[23];
 } __attribute__((packed));
 
+/* GPRS data. This is following the header */
+struct l1ctl_gprs_data_ind {
+	uint8_t data[23];
+} __attribute__((packed));
+
 /* traffic from the network */
 struct l1ctl_traffic_ind {
 	uint8_t data[TRAFFIC_DATA_LEN];

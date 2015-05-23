@@ -32,6 +32,9 @@ struct l1ctl_info_dl *fill_info_dl_structure(struct gsmtap_hdr *gsmtapHeader, st
 /* transmit L1CTL_DATA_IND message */
 void l1_to_l2_data_ind(int socket_l2, unsigned char *data, int len, struct gsmtap_hdr *gsmtapHeader);
 
+/* transmit L1CTL_GPRS_DATA_IND message */
+void l1_to_l2_gprs_data_ind(int socket_l2, unsigned char *data, int len, struct gsmtap_hdr *gsmtapHeader);
+
 /** alloc L1CTL to msgb structure **/
 struct msgb *l1ctl_msgb_alloc(uint8_t msg_type, uint8_t flag);
 

@@ -48,6 +48,7 @@
 #include <osmocom/gsm/lapdm.h>
 #include <osmocom/bb/common/logging.h>
 #include <osmocom/codec/codec.h>
+#include <osmocom/bb/gprs/gprs_l1ctl.h>
 
 extern struct gsmtap_inst *gsmtap_inst;
 
@@ -982,6 +983,9 @@ int l1ctl_recv(struct osmocom_ms *ms, struct msgb *msg)
 		break;
 	case L1CTL_TRAFFIC_CONF:
 		msgb_free(msg);
+		break;
+	case L1CTL_GPRS_DATA_IND:
+		rc = rx_ph_gprs_data_ind(msg);
 		break;
 	default:
 		LOGP(DL1C, LOGL_ERROR, "Unknown MSG: %u\n", l1h->msg_type);

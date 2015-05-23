@@ -22,7 +22,12 @@ void switch_BTS_messages(int socket_l2, unsigned char *msg, int length){
 	/* fill the gsmtap header from incoming msg */
 	memcpy(gsmtapHeader, msg, sizeof(struct gsmtap_hdr));
 
-	l1_to_l2_data_ind(socket_l2, msg, length, gsmtapHeader);
+	if(gsmtapHeader->type == GSMTAP_TYPE_UM){
+		//Data on Um interface => GSM data
+		l1_to_l2_data_ind(socket_l2, msg, length, gsmtapHeader);
+	} else {
+		l1_to_l2_gprs_data_ind(socket_l2, msg, length, gsmtapHeader);
+	}
 
 	free(gsmtapHeader);
 
