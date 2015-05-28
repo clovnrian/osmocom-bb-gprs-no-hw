@@ -32,10 +32,12 @@ AC_OUTPUT(
     src/common/Makefile
     src/misc/Makefile
     src/mobile/Makefile
+    src/gprs/Makefile
     include/Makefile
     include/osmocom/Makefile
     include/osmocom/bb/Makefile
     include/osmocom/bb/common/Makefile
     include/osmocom/bb/misc/Makefile
     include/osmocom/bb/mobile/Makefile
+    include/osmocom/bb/gprs/Makefile
     Makefile)
