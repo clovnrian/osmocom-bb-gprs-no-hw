@@ -33,7 +33,7 @@
 #include <osmocom/bb/gprs/gprs_l1ctl.h>
 
 /** handle received GPRS data */
-static int rx_ph_gprs_data_ind(struct msgb *msg){
+int rx_ph_gprs_data_ind(struct msgb *msg){
 
 	return 1;
 }
