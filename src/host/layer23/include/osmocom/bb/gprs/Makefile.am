@@ -1,1 +1,1 @@
-noinst_HEADERS = gprs_l1ctl.h
+noinst_HEADERS = gprs_l1ctl.h gprs_gmm.h

@@ -1,4 +1,4 @@
-/* L1CTL protocol for GPRS on phone */
+/* GMM layer of GPRS on phone */
 
 /* (C) 2015 by Miroslav Babjak
  *
@@ -25,34 +25,39 @@
 #include <string.h>
 #include <errno.h>
 
-#include <l1ctl_proto.h>
-
 #include <osmocom/core/msgb.h>
-#include <osmocom/bb/common/l1l2_interface.h>
-#include <osmocom/bb/gprs/gprs_l1ctl.h>
 #include <osmocom/bb/common/osmocom_data.h>
 #include <osmocom/bb/common/logging.h>
+#include <osmocom/bb/gprs/gprs_gmm.h>
+#include <osmocom/gsm/protocol/gsm_04_08.h>
+#include <osmocom/bb/gprs/gprs_llc.h>
 
-/** handle received GPRS data */
-int rx_ph_gprs_data_ind(struct osmocom_ms *ms, struct msgb *msg){
+/** Send channel request to network */
+int gmm_tx_channel_request(struct osmocom_ms *ms){
+	struct msgb *msg = gsm48_msgb_alloc();
+	struct gsm48_hdr *gh;
 
-	struct l1ctl_gprs_data_ind *data_ind;
-	struct l1ctl_info_dl *dl;
+	gh->proto_discr = GSM48_PDISC_MM_GPRS;
+	gh->msg_type = GSM48_MT_GMM_ATTACH_REQ;
+	gh->data[0] = 0x70;
 
-	if (msgb_l3len(msg) < sizeof(*data_ind)) {
-		LOGP(DL1C, LOGL_ERROR, "MSG too short GPRS Data Ind: %u\n",
-				msgb_l3len(msg));
-		msgb_free(msg);
-		return -1;
-	}
+	return gprs_gmm_sendmsg(msg);
+}
 
-	dl = (struct l1ctl_info_dl *) msg->l1h;
-	msg->l2h = dl->payload;
-	data_ind = (struct l1ctl_gprs_data_ind *) msg->l2h;
+/* Send a message through the underlying layer */
+int gprs_gmm_sendmsg(struct msgb *msg)
+{
+	/* caller needs to provide TLLI, BVCI and NSEI */
+	return gprs_llc_tx_ui(msg, GPRS_SAPI_GMM);
+}
 
-	/* pull the L1 header from the msgb */
-	msgb_pull(msg, msg->l2h - (msg->l1h-sizeof(struct l1ctl_hdr)));
-	msg->l1h = NULL;
+/* initialize GPRS Mobility Management process */
+int gsm48_gmm_init(struct osmocom_ms *ms)
+{
+	struct gprs_gmmlayer *gprsGmm = &ms->gprsGmmLayer;
 
-	return 1;
+	memset(gprsGmm, 0, sizeof(*gprsGmm));
+	gprsGmm->ms = ms;
+
+	LOGP(DMM, LOGL_INFO, "init GPRS Mobility Management process\n");
 }

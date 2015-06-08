@@ -22,6 +22,7 @@ enum {
 	DSUM,
 	DSIM,
 	DGPS,
+	DLLC,
 };
 
 extern const struct log_info log_info;

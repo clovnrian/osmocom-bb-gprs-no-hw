@@ -19,6 +19,7 @@ struct osmocom_ms;
 #include <osmocom/bb/mobile/gsm48_mm.h>
 #include <osmocom/bb/mobile/gsm48_cc.h>
 #include <osmocom/bb/mobile/mncc_sock.h>
+#include <osmocom/bb/gprs/gprs_gmm.h>
 #include <osmocom/bb/common/sim.h>
 #include <osmocom/bb/common/l1ctl.h>
 
@@ -75,6 +76,7 @@ struct osmocom_ms {
 	struct gsm322_cellsel cellsel;
 	struct gsm48_mmlayer mmlayer;
 	struct gsm48_cclayer cclayer;
+	struct gprs_gmmlayer gprsGmmLayer;
 	struct osmomncc_entity mncc_entity;
 	struct llist_head trans_list;
 };

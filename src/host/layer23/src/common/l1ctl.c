@@ -985,7 +985,7 @@ int l1ctl_recv(struct osmocom_ms *ms, struct msgb *msg)
 		msgb_free(msg);
 		break;
 	case L1CTL_GPRS_DATA_IND:
-		rc = rx_ph_gprs_data_ind(msg);
+		rc = rx_ph_gprs_data_ind(ms, msg);
 		break;
 	default:
 		LOGP(DL1C, LOGL_ERROR, "Unknown MSG: %u\n", l1h->msg_type);
