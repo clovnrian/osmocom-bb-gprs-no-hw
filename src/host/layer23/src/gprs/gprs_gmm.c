@@ -60,4 +60,6 @@ int gsm48_gmm_init(struct osmocom_ms *ms)
 	gprsGmm->ms = ms;
 
 	LOGP(DMM, LOGL_INFO, "init GPRS Mobility Management process\n");
+
+	gprsGmm->state = GPRS_GMM_ST_IDLE;
 }
